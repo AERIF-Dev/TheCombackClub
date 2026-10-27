@@ -51,6 +51,7 @@ async function saveMatches(c: Ctx, found: Match[]) { if (!found.length)
         statements.push(q('INSERT OR IGNORE INTO match_edges (id,match_id,from_id,to_id,offer_id,need_id) VALUES (?,?,?,?,?,?)', m.id + ':' + e.from, m.id, e.from, e.to, e.offer.id, e.need.id));
 } await db().batch(statements); }
 async function snapshot(c: Ctx) {
+    const signedInName = c.demo ? undefined : (await getChatGPTUser())?.displayName;
     const base = await community(c);
     const exchanges = await rows<Record<string, unknown>>('SELECT e.*,m.data AS match_data FROM exchanges e JOIN matches m ON m.id=e.match_id WHERE e.scope=? ORDER BY e.created DESC', c.scope);
     const approvals = await rows<Record<string, unknown>>('SELECT a.* FROM exchange_approvals a JOIN exchanges e ON e.id=a.exchange_id WHERE e.scope=?', c.scope);
@@ -60,7 +61,7 @@ async function snapshot(c: Ctx) {
     }>('SELECT value FROM impact_events WHERE scope=? AND type=?', c.scope, 'completed');
     const occupied = new Set(exchanges.filter(e => e.status !== 'Cancelled').flatMap(e => (JSON.parse(e.match_data as string) as Match).edges.flatMap(x => [x.offer.id, x.need.id])));
     const matches = findMatches(base.members, base.listings, exchanges.map(e => e.match_id as string), base.blocks).filter(m => !m.edges.some(e => occupied.has(e.offer.id) || occupied.has(e.need.id)));
-    return { ...base, actor: c.actor, demo: !!c.demo, matches, exchanges: exchanges.filter(e => approvals.some(a => a.exchange_id === e.id && a.member_id === c.actor)).map(e => ({ ...e, match: JSON.parse(e.match_data as string), approvals: approvals.filter(a => a.exchange_id === e.id) })), stats: { members: base.members.length, offers: base.listings.filter(x => x.kind === 'offer').length, needs: base.listings.filter(x => x.kind === 'need').length, matches: (await q('SELECT COUNT(*) AS n FROM matches WHERE scope=?', c.scope).first<{
+    return { ...base, signedInName, actor: c.actor, demo: !!c.demo, matches, exchanges: exchanges.filter(e => approvals.some(a => a.exchange_id === e.id && a.member_id === c.actor)).map(e => ({ ...e, match: JSON.parse(e.match_data as string), approvals: approvals.filter(a => a.exchange_id === e.id) })), stats: { members: base.members.length, offers: base.listings.filter(x => x.kind === 'offer').length, needs: base.listings.filter(x => x.kind === 'need').length, matches: (await q('SELECT COUNT(*) AS n FROM matches WHERE scope=?', c.scope).first<{
                 n: number;
             }>())?.n || 0, proposals: exchanges.length, accepted: exchanges.filter(e => ['Accepted', 'In Progress', 'Completed'].includes(e.status as string)).length, completed: exchanges.filter(e => e.status === 'Completed').length, hours: events.reduce((s, e) => s + e.value, 0), circles: exchanges.filter(e => (JSON.parse(e.match_data as string) as Match).type === 'circle').length, aiRequests: ai.filter(a => a.provider === 'openai').length, aiSuccess: ai.filter(a => a.provider === 'openai' && a.success).length, fallback: ai.filter(a => a.provider === 'rules').length, latency: ai.filter(a => a.provider === 'openai' && a.success).reduce((s, a) => s + Number(a.latency), 0) / Math.max(1, ai.filter(a => a.provider === 'openai' && a.success).length), aiProposals: exchanges.filter(e=>e.ai===1).length, aiAccepted: exchanges.filter(e=>e.ai===1&&['Accepted','In Progress','Completed'].includes(e.status as string)).length }, aiAvailable: !!((env as unknown as Record<string, string>).OPENAI_API_KEY && (env as unknown as Record<string, string>).OPENAI_MODEL) };
 }
@@ -97,9 +98,10 @@ export async function POST(req: Request) {
             const existing = await q('SELECT id FROM members WHERE auth_id=?', user.userId).first<{
                 id: string;
             }>();
-            const memberId = existing?.id || id();
+            let memberId = existing?.id || id();
             if (!existing)
-                await q('INSERT INTO members (id,scope,auth_id,name,neighborhood,bio,availability,mode,demo,created) VALUES (?,?,?,?,?,?,?,?,?,?)', memberId, 'community', user.userId, 'New neighbor', 'Corktown', 'Ready to share a skill.', 'Flexible', 'both', 0, now()).run();
+                await q('INSERT INTO members (id,scope,auth_id,name,neighborhood,bio,availability,mode,demo,created) VALUES (?,?,?,?,?,?,?,?,?,?) ON CONFLICT(auth_id) DO NOTHING', memberId, 'community', user.userId, user.fullName?.trim().slice(0,80) || 'New neighbor', 'Corktown', 'Ready to share a skill.', 'Flexible', 'both', 0, now()).run();
+            memberId = (await q('SELECT id FROM members WHERE auth_id=?', user.userId).first<{id:string}>())!.id;
             return json(await snapshot({ scope: 'community', actor: memberId, demo: 0 }), 200, sessionCookie(req, 'member'));
         }
         const c = await context(req);

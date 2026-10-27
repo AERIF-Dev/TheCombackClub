@@ -1,5 +1,13 @@
 # Implementation and verification report
 
+## Public access and authentication update — October 27, 2026
+
+The owner requested public access; Sites access is now public. Homepage and demo require no sign-in. Header and onboarding use top-level Continue with ChatGPT links to the platform path. The platform handles sign-out. Persistent member records are keyed by trusted authenticated identity; repeated callbacks reuse the same member. The account name is returned only to that member, with email fallback kept out of public profile defaults. Demo scope and member authorization remain separate. Older owner-private references below describe the first release.
+
+ChatGPT plan-backed inference is not enabled. The [official remotely hosted-app route](https://developers.openai.com/siwc/token-sharing-open-source) requires requesting access through the [interest form](https://openai.com/form/sign-in-with-chatgpt-interest/), selecting **Sign in and ChatGPT plan use for AI requests**. The local open-source OAuth flow and Codex app-server example do not establish approval for this hosted Site. No Codex credentials were accessed.
+
+No production environment variables or standard authorized provider keys were configured when inspected. Real inference remains unavailable. To enable the existing server adapter, configure an authorized `OPENAI_API_KEY` as a Sites secret and an eligible `OPENAI_MODEL`, redeploy, and verify a successful skill-understanding response with recorded latency. API billing is separate from a ChatGPT subscription. Rule-based suggestions remain explicitly labeled as non-AI output.
+
 ## Shipped behavior
 
 - Responsive official Detroit heritage identity: warm cream, forest green, burnt orange, soft sage, and retro display typography; homepage, how-it-works, featured exchanges, circles, mission/history, privacy guidance, and functional navigation. The supplied logo is preserved unchanged, with clean symbol crops for compact branding and favicon, plus branded metadata/social-preview defaults.

@@ -6,7 +6,7 @@ A Detroit-first skills exchange built for ChatGPT Sites. Members trade skills di
 
 [Hosted Site](https://the-comeback-club-detroit.famous-tulip-4183.chatgpt.site) · [Official GitHub repository](https://github.com/AERIF-Dev/TheCombackClub)
 
-The hosted Site is owner-private. The repository spelling `TheCombackClub` is intentional; the public product name is **The Comeback Club**.
+The hosted Site is public. Anyone can view the homepage and try the isolated demo without signing in. Continue with ChatGPT is optional and creates a separate persistent member account. The repository spelling `TheCombackClub` is intentional; the public product name is **The Comeback Club**.
 
 ## Official branding
 
