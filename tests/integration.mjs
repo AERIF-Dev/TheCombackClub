@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 const base=process.env.TEST_URL||'http://127.0.0.1:5173';
 let checks=0;
 function check(value,message){assert.ok(value,message);checks++;console.log('PASS '+message);}
-function client(){let cookie='';return {async request(action,payload={},expected=200){const r=await fetch(base+'/api/club',{method:action?'POST':'GET',headers:{...(action?{'Content-Type':'application/json',Origin:base}:{}),...(cookie?{Cookie:cookie}:{})},...(action?{body:JSON.stringify({action,...payload})}:{})});const sc=r.headers.get('set-cookie');if(sc)cookie=sc.split(';')[0];const d=await r.json();assert.ok((Array.isArray(expected)?expected:[expected]).includes(r.status),JSON.stringify(d));return d;}};}
+function client(){let cookie='';return {async request(action,payload={},expected=200){const r=await fetch(base+'/api/club',{method:action?'POST':'GET',headers:{...(action?{'Content-Type':'application/json',Origin:base}:{}),...(cookie?{Cookie:cookie}:{})},...(action?{body:JSON.stringify({action,...payload})}:{})});const sc=r.headers.getSetCookie().find(value=>value.startsWith('cc_session='));if(sc)cookie=sc.split(';')[0];const d=await r.json();assert.ok((Array.isArray(expected)?expected:[expected]).includes(r.status),JSON.stringify(d));return d;}};}
 const a=client(),b=client(),guest=client();
 check((await guest.request()).guest,'anonymous access returns guest state');
 await guest.request('profile',{profile:{}},401);check(true,'anonymous writes rejected');
