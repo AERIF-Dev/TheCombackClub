@@ -1,8 +1,18 @@
 # The Comeback Club
 
-**Give what you can. Get what you need.**
+**Old-school barter. New connections.**
 
 A Detroit-first skills exchange built for ChatGPT Sites. Members trade skills directly or form three-person Comeback Circles. Everyone explicitly agrees before work starts, and completed hours count only after every participant confirms.
+
+[Hosted Site](https://the-comeback-club-detroit.famous-tulip-4183.chatgpt.site) · [Official GitHub repository](https://github.com/AERIF-Dev/TheCombackClub)
+
+The hosted Site is owner-private. The repository spelling `TheCombackClub` is intentional; the public product name is **The Comeback Club**.
+
+## Official branding
+
+The supplied original logo is preserved byte-for-byte at `public/branding/comeback-club-logo.png`, including its 1536 × 1024 dimensions and transparency. The hero and About page display the full artwork. Header, demo welcome, circles, and footer use a CSS crop of its exchange symbol. `public/favicon.svg` embeds the original pixels in the same crop; regenerate it with `node scripts/generate-brand-icon.mjs`.
+
+Warm cream, forest green, burnt orange, and soft sage carry the identity throughout the product. Fraunces headlines and DM Sans body text have system fallbacks. The logo artwork is never recolored or stretched.
 
 ## Start here
 

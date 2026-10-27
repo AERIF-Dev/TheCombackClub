@@ -2,7 +2,7 @@
 
 ## Shipped behavior
 
-- Responsive charcoal, warm cream, copper, and green interface; homepage, how-it-works, featured exchanges, circles, mission/history, privacy guidance, and functional navigation.
+- Responsive official Detroit heritage identity: warm cream, forest green, burnt orange, soft sage, and retro display typography; homepage, how-it-works, featured exchanges, circles, mission/history, privacy guidance, and functional navigation. The supplied logo is preserved unchanged, with clean symbol crops for compact branding and favicon, plus branded metadata/social-preview defaults.
 - Durable relational D1 schema, generated migrations, transactional per-session seed data, 15 fictional residents, four direct matches, two valid three-way circles, and unmatched examples.
 - Guest demo with participant switching, isolated session data, refresh persistence, and safe session-scoped reset. Demo bearer cookies are HTTP-only, SameSite=Lax, Secure over HTTPS, and stored as hashes server-side; member IDs do not reveal a usable bearer token.
 - Separate real-member accounts through Sites identity, editable profiles and listings, search/category/neighborhood/type filtering, member details, and block/report records.

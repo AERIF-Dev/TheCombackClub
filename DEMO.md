@@ -1,6 +1,8 @@
 # The Comeback Club — judge's walkthrough
 
-Give what you can. Get what you need.
+Old-school barter. New connections.
+
+Open the [hosted Comeback Club](https://the-comeback-club-detroit.famous-tulip-4183.chatgpt.site). The original official logo appears on the cream homepage, with a cropped exchange symbol throughout the application. **Find My Comeback** goes straight to matching; **Explore the Club** opens the neighborhood listings.
 
 The hosted Site starts owner-private. Its hosting access gate may require ChatGPT sign-in; the interactive demo itself requires no application registration or AI credentials. To let judges visit independently, the owner must deliberately share the Site with them or request public access.
 

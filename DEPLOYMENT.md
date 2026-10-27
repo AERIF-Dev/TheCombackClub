@@ -4,6 +4,8 @@ This app uses the supplied Sites Vinext starter: React + TypeScript, a Workers-c
 
 The real Site ID is preserved in `.openai/hosting.json`: `appgprj_6ae0d9b42cf8819199c305fc8acae770`. Do not create another Site for this checkout or replace this ID.
 
+The official GitHub origin is `https://github.com/AERIF-Dev/TheCombackClub.git`. Its spelling is intentional. GitHub stores the application source; Sites hosts the application and managed D1. After checks, commit the source and use a normal `git push -u origin main`. Never force-push. Sites publication uses a separate short-lived source credential and does not replace GitHub origin.
+
 ## Local development
 
 Requires Node 22.13+ (tested on Node 24), pnpm, Git, and tar. The lockfile records the installed dependencies. Build scripts for esbuild, workerd, sharp, and unrs-resolver are approved in `pnpm-workspace.yaml`.
